@@ -6,15 +6,13 @@ class NavigationIconView{
     Widget icon,
     Widget activeIcon,
     String title,
-    Color color,
-//    TickerProvider vsync,
-  }) :
-        item = new BottomNavigationBarItem(
+    Color color
+  }) :item = new BottomNavigationBarItem(
           icon: icon,
           activeIcon: activeIcon,
           title: new Text(title),
           backgroundColor: color,
-        ) {}
+        ) ;
 
   final BottomNavigationBarItem item;
 

@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:v2_xpo/model/Node.dart';
 import 'package:v2_xpo/service/indexService.dart';
+import 'package:v2_xpo/service/userService.dart';
+import 'package:v2_xpo/view/Tab/TopicCard.dart';
 
 class NodeContainer extends StatefulWidget {
   Node node;
@@ -18,6 +20,7 @@ class _NodeContainerState extends State<NodeContainer>
   Node node ;
   List<Topic> topics = <Topic>[];
   _NodeContainerState({this.node});
+  UserService userService = new UserService();
 
 
   @override
@@ -36,7 +39,7 @@ class _NodeContainerState extends State<NodeContainer>
   List<Widget> _buildList(List<Topic> topics) {
     List<Widget> list = <Widget>[];
     for (Topic topic in topics) {
-      list.add(new Text(topic.title));
+       list.add(new TopicCard(topic: topic,));
     }
     return list;
   }
@@ -62,16 +65,27 @@ class _NodeContainerState extends State<NodeContainer>
 
   }
 
-  // TODO: implement wantKeepAlive
   @override
   bool get wantKeepAlive => true;
 
-  Future<Null> _refresh() async{
-    List topicTemp = await (node.eName == 'index' ? IndexService.getIndexData() : IndexService.getNodeData(node));
+  Future<void> _refresh() async {
+    topics = await (node.eName == 'index' ? IndexService.getIndexData() : IndexService.getNodeData(node));
+    _getUserByTopics(topics);
+    print("over");
     if (!mounted) return;
     setState(() {
-      topics = topicTemp;
     });
+  }
+
+  Future<void> _getUserByTopics (List<Topic> topicList) async {
+    for (Topic topic in topicList) {
+      await this.userService.getUserByName(topic.author.username);
+      topic.author.avatar_large = "https://cdn.v2ex.com/avatar/8b75/b98f/305534_large.png";
+      setState(() {
+        topics = topicList;
+      });
+    }
+
   }
 }
 
