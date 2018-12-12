@@ -73,7 +73,7 @@ class User {
   String username;
   String uri;
   String status;
-  String id;
+  int id;
   String url;
   String github;
   String tagline;
@@ -100,19 +100,31 @@ class User {
     this.uri,
   });
 
-//  factory User.fromJSON(Map<String, dynamic> json) {
-//    return new User(
-//      username: json['username'],
-//      uri: json['uri'],
-//      status: json['status'],
-//      id: json['id'],
-//      github: json['github'],
-//      tagline: json['tagline'],
-//      bio: json['bio'],
-//      avatar_mini: json['avatar_mini'],
-//      avatar_large: json['avatar_large'],
-//      avatar_normal: json['avatar_normal'],
-//      created: new DateTime(json['created']),
-//    );
-//  }
+  factory User.fromJSON(Map<String, dynamic> json) {
+    if ((new RegExp("^//")).firstMatch(json['avatar_mini']) != null) {
+      json['avatar_mini'] = 'https:' +json ['avatar_mini'];
+    }
+
+    if ((new RegExp("^//")).firstMatch(json['avatar_large']) != null) {
+      json['avatar_large'] = 'https:' +json ['avatar_large'];
+    }
+
+    if ((new RegExp("^//")).firstMatch(json['avatar_normal']) != null) {
+      json['avatar_normal'] = 'https:' +json ['avatar_normal'];
+    }
+
+    return new User(
+      username: json['username'],
+      uri: json['uri'],
+      status: json['status'],
+      id: json['id'],
+      github: json['github'],
+      tagline: json['tagline'],
+      bio: json['bio'],
+      avatar_mini: json['avatar_mini'],
+      avatar_large: json['avatar_large'],
+      avatar_normal: json['avatar_normal'],
+      created: new DateTime.fromMicrosecondsSinceEpoch(json['created']),
+    );
+  }
 }

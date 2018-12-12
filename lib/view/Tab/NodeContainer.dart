@@ -70,7 +70,7 @@ class _NodeContainerState extends State<NodeContainer>
 
   Future<void> _refresh() async {
     topics = await (node.eName == 'index' ? IndexService.getIndexData() : IndexService.getNodeData(node));
-    _getUserByTopics(topics);
+//    _getFirstUserByTopics(topics);
     print("over");
     if (!mounted) return;
     setState(() {
@@ -85,6 +85,14 @@ class _NodeContainerState extends State<NodeContainer>
         topics = topicList;
       });
     }
+
+  }
+
+  Future<void> _getFirstUserByTopics (List<Topic> topicList) async {
+    topicList[0].author = await this.userService.getUserByName(topicList[0].author.username);
+    setState(() {
+      topics = topicList;
+    });
 
   }
 }

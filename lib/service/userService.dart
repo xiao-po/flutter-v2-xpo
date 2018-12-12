@@ -8,8 +8,9 @@ class UserService {
     Dio dio =  new  Dio();
     try {
       print(name);
-      Response<User> response =await dio.get(_UserApi.Merber + "?username=" +  name);
-      return response.data;
+      Response response =await dio.get(_UserApi.Merber + "?username=" +  name);
+
+      return User.fromJSON(response.data);
     } catch(e) {
       print ( name + 'userService error');
     }
