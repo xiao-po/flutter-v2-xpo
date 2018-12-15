@@ -8,6 +8,7 @@ class XmlHttpApi {
     return AppHttpValue.url + 'feed/' + nodeName + '.xml';
   }
 
-
-
+  static String DomainUrl(nodeName) {
+    return AppHttpValue.url + '?tab=' + nodeName;
+  }
 }

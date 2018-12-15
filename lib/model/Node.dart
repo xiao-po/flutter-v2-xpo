@@ -1,14 +1,13 @@
 import 'package:meta/meta.dart';
-import 'package:xml/xml/nodes/document.dart';
 import 'package:xml/xml/nodes/element.dart';
 import 'package:v2_xpo/service/userService.dart';
-import 'package:dio/dio.dart';
+import 'package:html/dom.dart';
 
-class Node {
+class VNode {
   String name;
   String eName;
 
-  Node(@required this.eName,@required this.name):
+  VNode(@required this.eName,@required this.name):
         assert(eName != null),
         assert(name != null),
         super();
@@ -17,57 +16,70 @@ class Node {
 class Topic {
   String title;
   String link;
-  DateTime publishTime;
-  DateTime updateTime;
+  NodeDetail node;
   User author;
+  User lastReplier;
+  String replyCount;
+  String lastReplyTimeString;
   String content;
 
 
 
-  Topic(this.title, this.link, this.publishTime, this.updateTime, this.author,
-      this.content);
+  Topic();
 
 
-  factory Topic.fromXml(XmlElement xml) {
+
+  factory Topic.fromHtml(Element html) {
+    Topic topic = new Topic();
     String title;
-    String link;
-    DateTime publishTime;
-    DateTime updateTime;
     User author;
-    String content;
-    UserService userService = new UserService();
-    xml.findElements("title").forEach((element){
-      title = element.text;
-    });
-    xml.findElements("link").forEach((element){
-      link = element.text;
-    });
-    xml.findElements("published").forEach((element){
-      publishTime = DateTime.parse(element.text);
-    });
-    xml.findElements("updated").forEach((element){
-      updateTime = DateTime.parse(element.text);
-    });
-    xml.findElements("author").forEach((element){
-      XmlElement authorNode = element;
-      String username = authorNode.findElements("name").toList()[0].text;
-      String uri = authorNode.findElements("uri").toList()[0].text;
-      author = new User.simple(username: username, uri: uri);
-    });
-    xml.findElements("content").forEach((element){
-      content = element.text;
-    });
-    return new Topic(title, link, publishTime, updateTime, author, content);
+    NodeDetail node = new NodeDetail();
+    User lastReplier;
+    String replyCount;
+    String lastReplyTimeString;
+
+    Element titleElement = html.querySelector(".item_title a");
+    topic.link = titleElement.attributes['src'];
+    topic.title = titleElement.text;
+    
+    Element topicInfoElement = html.querySelector(".topic_info");
+    Element topicNodeInfo = topicInfoElement.querySelector("a.node");
+    node.name = topicNodeInfo.text;
+    node.nodeUrl = topicNodeInfo.attributes['src'];
+    topic.node = node;
+    Element replyCountElement = html.querySelector('.count_livid');
+
+    if (replyCountElement != null) {
+      topic.replyCount = replyCountElement.text;
+    }
+
+    topic.lastReplyTimeString =  topicInfoElement.text;
+    List<Element> userElement = topicInfoElement.querySelectorAll("strong a");
+    String username = userElement[0].text;
+    String uri = userElement[0].attributes['src'];
+    topic.author = new User.simple(username: username, uri: uri);
+    topic.author.avatar_normal = html.querySelector("img.avatar").attributes["src"];
+    if ((new RegExp("^//")).firstMatch(topic.author.avatar_normal) != null) {
+      topic.author.avatar_normal = 'https:' + topic.author.avatar_normal;
+    }
+
+    if (userElement.length == 2) {
+      username = userElement[1].text;
+      uri = userElement[1].attributes['src'];
+      lastReplier = new User.simple(username: username, uri: uri);
+      topic.lastReplier = lastReplier;
+    }
+
+    return  topic;
   }
-
-
 }
 
-class TopicFactory {
-  fromXml(XmlDocument xml){
 
-  }
+class NodeDetail {
+  String name;
+  String nodeUrl;
 }
+
 
 class User {
   String username;

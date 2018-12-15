@@ -8,7 +8,7 @@ import 'package:v2_xpo/service/userService.dart';
 import 'package:v2_xpo/view/Tab/TopicCard.dart';
 
 class NodeContainer extends StatefulWidget {
-  Node node;
+  VNode node;
   NodeContainer({this.node}):super();
   List<Topic> topics = <Topic>[];
   @override
@@ -17,7 +17,7 @@ class NodeContainer extends StatefulWidget {
 
 class _NodeContainerState extends State<NodeContainer>
     with AutomaticKeepAliveClientMixin{
-  Node node ;
+  VNode node ;
   List<Topic> topics = <Topic>[];
   _NodeContainerState({this.node});
   UserService userService = new UserService();
@@ -32,6 +32,7 @@ class _NodeContainerState extends State<NodeContainer>
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Color(0xcccccc),
       body: _buildRefreshTab(),
     );
   }
@@ -69,31 +70,11 @@ class _NodeContainerState extends State<NodeContainer>
   bool get wantKeepAlive => true;
 
   Future<void> _refresh() async {
-    topics = await (node.eName == 'index' ? IndexService.getIndexData() : IndexService.getNodeData(node));
-//    _getFirstUserByTopics(topics);
+    topics = await IndexService.getIndexHtmlData(node);
     print("over");
     if (!mounted) return;
     setState(() {
     });
-  }
-
-  Future<void> _getUserByTopics (List<Topic> topicList) async {
-    for (Topic topic in topicList) {
-      await this.userService.getUserByName(topic.author.username);
-      topic.author.avatar_large = "https://cdn.v2ex.com/avatar/8b75/b98f/305534_large.png";
-      setState(() {
-        topics = topicList;
-      });
-    }
-
-  }
-
-  Future<void> _getFirstUserByTopics (List<Topic> topicList) async {
-    topicList[0].author = await this.userService.getUserByName(topicList[0].author.username);
-    setState(() {
-      topics = topicList;
-    });
-
   }
 }
 

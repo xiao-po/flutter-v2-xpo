@@ -12,10 +12,15 @@ class MainTab extends StatefulWidget{
 class _MainTabState extends State<MainTab>
   {
   String title = 'V2ex';
-  List<Node> nodes = <Node>[
-    new Node("index","主页"),
-    new Node("tech", "技术"),
-    new Node("create", "创造")
+  List<VNode> nodes = <VNode>[
+    new VNode("tech", "技术"),
+    new VNode("creative", "创意"),
+    new VNode("play", "好玩"),
+    new VNode("apple", "apple"),
+    new VNode("jobs", "酷工作"),
+    new VNode("qna", "问与答"),
+    new VNode("hot", "最热"),
+    new VNode("all", "全部")
   ];
 
   @override
