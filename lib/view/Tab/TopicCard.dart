@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:v2_xpo/model/Node.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:v2_xpo/model/model.dart';
+import 'package:v2_xpo/view/all-view.dart';
 
 class TopicCard extends StatelessWidget {
-  const TopicCard({Key key, Topic topic})
+  const TopicCard({Key key, TopicListItem topic})
     : topic = topic;
 
-  final Topic topic;
+  final TopicListItem topic;
   @override
   Widget build(BuildContext context) {
     return new SizedBox(
@@ -18,7 +19,11 @@ class TopicCard extends StatelessWidget {
           ),
           child: new InkWell(
             onTap: () {
-              print("card touch");
+              Navigator.push(context, MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return ReplyPage(topicItem: topic);
+                }
+              ));
             },
             child: new Row(
                 children: <Widget>[
@@ -35,10 +40,6 @@ class TopicCard extends StatelessWidget {
 
   Widget createHeaderImage(User user) {
     String imageUrl = user.avatar_normal != null ? user.avatar_normal : "";
-    if (user.avatar_normal != null) {
-      print(user.avatar_normal);
-    }
-    print(imageUrl);
     return InkWell (
       child: new Container(
           width: 70,
@@ -53,7 +54,7 @@ class TopicCard extends StatelessWidget {
     );
   }
 
-  Widget createTopicContent(Topic topic) {
+  Widget createTopicContent(TopicListItem topic) {
     return new Expanded(
       flex: 1,
       child: new Column(
@@ -83,22 +84,25 @@ class TopicCard extends StatelessWidget {
     );
   }
 
-  Widget createTopicInfo(Topic topic) {
+  Widget createTopicInfo(TopicListItem topic) {
     return new Container(
       padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
       child: new Row(
         children: <Widget>[
-          new Text(topic.author.username),
-          NodeButton(
+          _NodeButton(
               topic: topic,
               radius: 20,
-          )
+              onTap: () {
+                // TODO: 跳转节点路由
+              },
+          ),
+          new Text(topic.author.username)
         ],
       ),
     );
   }
 
-  Widget createTopicReplyCount(Topic topic)  {
+  Widget createTopicReplyCount(TopicListItem topic)  {
     if (topic.replyCount != '' && topic.replyCount != null) {
       return new Container(
         padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
@@ -129,14 +133,16 @@ class TopicCard extends StatelessWidget {
 
 }
 
-class NodeButton extends StatelessWidget {
-  final Topic topic;
+class _NodeButton extends StatelessWidget {
+  final TopicListItem topic;
   final double radius;
   final int color;
-  const NodeButton({
+  final GestureTapCallback onTap;
+  const _NodeButton({
     this.topic,
     this.radius,
-    this.color
+    this.color,
+    this.onTap
   }):
         assert(topic != null),
         assert(radius != null);
@@ -145,7 +151,7 @@ class NodeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     int trueColor = color != null ? color : 0xffe3e3e3;
     return  Container(
-      margin: const EdgeInsets.only(left: 10.0),
+      margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
       child: new Material(
         color: Color(trueColor),
         borderRadius: BorderRadius.all(
@@ -153,9 +159,7 @@ class NodeButton extends StatelessWidget {
         ),
 
         child: new InkWell(
-          onTap: () {
-            print('button press');
-          },
+          onTap: onTap,
           borderRadius: BorderRadius.all(
             Radius.circular(radius),
           ),

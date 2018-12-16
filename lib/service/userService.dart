@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:v2_xpo/model/Node.dart';
+import 'package:v2_xpo/model/model.dart';
 
 class UserService {
   const UserService();
@@ -8,7 +8,7 @@ class UserService {
     Dio dio =  new  Dio();
     try {
       print(name);
-      Response response =await dio.get(_UserApi.Merber + "?username=" +  name);
+      Response response =await dio.get(_UserApi.member + "?username=" +  name);
 
       return User.fromJSON(response.data);
     } catch(e) {
@@ -19,5 +19,5 @@ class UserService {
 }
 
 class _UserApi {
-  static String Merber =  "https://www.v2ex.com/api/members/show.json";
+  static String member =  "https://www.v2ex.com/api/members/show.json";
 }

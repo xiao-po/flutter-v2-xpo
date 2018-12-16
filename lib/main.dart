@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:v2_xpo/view/IndexPage.dart';
+import 'package:v2_xpo/route/ViewRoute.dart';
 
 void main() {
   debugInstrumentationEnabled = true;
@@ -13,10 +13,18 @@ class MyApp extends StatelessWidget {
 
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: new ThemeData(
+      theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new IndexPage(title: 'tes1t'),
+      routes: _buildRoutes(),
+    );
+  }
+
+  Map<String, WidgetBuilder> _buildRoutes() {
+    return Map<String, WidgetBuilder>.fromIterable(
+      allViewRoutes,
+      key: (dynamic demo) => '${demo.routeName}',
+      value: (dynamic demo) => demo.buildRoute,
     );
   }
 }

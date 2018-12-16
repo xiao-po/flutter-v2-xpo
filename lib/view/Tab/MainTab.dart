@@ -29,7 +29,6 @@ class _MainTabState extends State<MainTab>
         length: nodes.length,
         child: new Scaffold(
           appBar: new AppBar(
-
             title: new Center(
               child: new TabBar(isScrollable: true,tabs: nodes.map((node) => new Tab(text: node.name)).toList()),
             ),

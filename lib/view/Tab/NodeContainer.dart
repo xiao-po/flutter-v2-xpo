@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:v2_xpo/model/Node.dart';
+import 'package:v2_xpo/model/model.dart';
 import 'package:v2_xpo/service/indexService.dart';
 import 'package:v2_xpo/service/userService.dart';
 import 'package:v2_xpo/view/Tab/TopicCard.dart';
@@ -10,15 +10,15 @@ import 'package:v2_xpo/view/Tab/TopicCard.dart';
 class NodeContainer extends StatefulWidget {
   VNode node;
   NodeContainer({this.node}):super();
-  List<Topic> topics = <Topic>[];
+  List<TopicListItem> topics = <TopicListItem>[];
   @override
   _NodeContainerState createState() => _NodeContainerState(node: node);
 }
 
 class _NodeContainerState extends State<NodeContainer>
-    with AutomaticKeepAliveClientMixin{
+    with AutomaticKeepAliveClientMixin {
   VNode node ;
-  List<Topic> topics = <Topic>[];
+  List<TopicListItem> topics = <TopicListItem>[];
   _NodeContainerState({this.node});
   UserService userService = new UserService();
 
@@ -37,9 +37,9 @@ class _NodeContainerState extends State<NodeContainer>
     );
   }
 
-  List<Widget> _buildList(List<Topic> topics) {
+  List<Widget> _buildList(List<TopicListItem> topics) {
     List<Widget> list = <Widget>[];
-    for (Topic topic in topics) {
+    for (TopicListItem topic in topics) {
        list.add(new TopicCard(topic: topic,));
     }
     return list;
@@ -71,7 +71,6 @@ class _NodeContainerState extends State<NodeContainer>
 
   Future<void> _refresh() async {
     topics = await IndexService.getIndexHtmlData(node);
-    print("over");
     if (!mounted) return;
     setState(() {
     });

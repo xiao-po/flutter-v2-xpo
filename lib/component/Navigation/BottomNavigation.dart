@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:v2_xpo/component/Navigation/NavigationIcon.dart';
-import 'package:v2_xpo/view/IndexPage.dart';
+import 'package:v2_xpo/view/index/IndexPage.dart';
 
 class BottomNavigation extends StatelessWidget {
   static const String routeName = '/material/bottom_navigation';
@@ -58,8 +58,5 @@ class BottomNavigation extends StatelessWidget {
       onTap: this.onTap
     );
   }
-
-
-
 }
 

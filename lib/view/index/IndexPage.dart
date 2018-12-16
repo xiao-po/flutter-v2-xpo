@@ -1,10 +1,6 @@
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:v2_xpo/model/title.dart';
-import 'package:v2_xpo/service/appService.dart';
-import 'package:v2_xpo/view/BottomNavigation.dart';
+import 'package:v2_xpo/component/Navigation/BottomNavigation.dart';
 import 'package:v2_xpo/view/Tab/MainTab.dart';
 
 final List<MyTitle> titles = <MyTitle>[
@@ -13,22 +9,17 @@ final List<MyTitle> titles = <MyTitle>[
 ];
 
 class IndexPage extends StatefulWidget  {
-  IndexPage({Key key, this.title}) : super(key: key);
-  final String title;
+  static const String routeName = '/';
+  static const String title = '主页';
+  IndexPage({Key key}) : super(key: key);
 
 
   @override
   IndexPageState createState() => new IndexPageState();
 }
 class IndexPageState extends State<IndexPage> with TickerProviderStateMixin  {
-  int _counter = 0;
   int currentIndex = 0;
   BottomNavigationBarType type = BottomNavigationBarType.fixed;
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   rebuild() {
     setState(() {
