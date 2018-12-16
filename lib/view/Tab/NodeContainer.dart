@@ -31,9 +31,9 @@ class _NodeContainerState extends State<NodeContainer>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Color(0xcccccc),
-      body: _buildRefreshTab(),
+    return new Container(
+      color: const Color(0xffDEDEde),
+      child: _buildRefreshTab(),
     );
   }
 
