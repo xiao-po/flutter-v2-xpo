@@ -1,6 +1,7 @@
 import 'Node.dart';
 import 'user.dart';
 import 'package:html/dom.dart';
+import 'package:v2_xpo/utils/topicParser/parse.dart';
 
 class _TopicModel {
   String title;
@@ -8,26 +9,9 @@ class _TopicModel {
   User author;
 }
 
-enum ContentType {
-  text,
-  img,
-  br
-}
-class _ContentElement {
-  ContentType type;
-  String content;
-}
-
-class StringContentElement extends _ContentElement {
-  StringContentElement(String text) {
-    type = ContentType.text;
-    content = text;
-  }
-}
-
 class Topic extends _TopicModel {
   String lastReplyTimeString;
-  List<_ContentElement> content;
+  List<RichTextContentElement> content;
   int thanksCount;
   List<ReplyItem> replList;
   Topic (
@@ -57,22 +41,16 @@ class Topic extends _TopicModel {
     topic.author.avatar_normal = headerUrl;
 
     Element contentElement = topicContentHtml.querySelector(".topic_content");
-    if (contentElement.querySelector(".markdown_body") != null) {
 
+    if (contentElement.querySelector(".markdown_body") != null) {
+      topic.content = ParseTextContent.toContentElementList(contentElement.querySelector(".markdown_body"));
     } else {
       if (contentElement.children != null
           && contentElement.children.length > 0){
-        for(Node item in contentElement.nodes) {
-          if (item is Text) {
-            item = (item) as Text;
-            // TODO： 添加 text 类型数据
-          } else if (item is Element && ((item) as Element).attributes['localName'] == "br") {
-            // TODO： 添加 换行符
-          }
-        }
+        topic.content = ParseTextContent.toContentElementList(contentElement);
       }
     }
-    return topic;
+     return topic;
   }
 
 
