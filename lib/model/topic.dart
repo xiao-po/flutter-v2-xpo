@@ -61,12 +61,7 @@ class TopicListItem extends _TopicModel{
   String link;
   String replyCount;
   String lastReplyTimeString;
-
-
-
   TopicListItem();
-
-
 
   factory TopicListItem.fromHtml(Element html) {
     TopicListItem topic = new TopicListItem();

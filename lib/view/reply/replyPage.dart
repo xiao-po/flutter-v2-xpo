@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:v2_xpo/model/model.dart';
 import 'package:v2_xpo/service/appService.dart';
+import 'package:v2_xpo/component/basic/basic.dart';
 
 class ReplyPage extends StatefulWidget{
   static const String routeName = '/reply';
@@ -36,9 +37,19 @@ class _ReplyPageState extends State<ReplyPage> {
         title: const Text(ReplyPage.title),
       ),
       body: Container(
-        child: Center(
-          child: Text(topicItem.title)
-        ),
+
+        child: Wrap(
+
+          children: <Widget>[
+            UrlText(
+              text: "doubi",
+              url: "测试",
+              onTap: (){
+                print('test');
+              },
+            ),
+          ],
+        )
       ),
     );
   }
