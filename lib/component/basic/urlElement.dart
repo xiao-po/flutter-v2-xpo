@@ -1,26 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
-//class UrlText extends Text {
-//  final String text;
-//  final String url;
-//  UrlText({
-//    this.text,
-//    this.url
-//  }): super(
-//      text,
-//      style: TextStyle(
-//        color: Color(0xff005999),
-//      )
-//  ) {
-//
-//  }
-//}
 
 class UrlText extends StatefulWidget {
   final String text;
   final String url;
   final GestureTapCallback onTap;
-  final _UrlTextStyle style;
+  final UrlTextStyle style;
   UrlText({
     @required this.text,
     @required this.url,
@@ -30,12 +16,12 @@ class UrlText extends StatefulWidget {
         assert(url != null);
 
   @override
-  State<StatefulWidget> createState() => _UrlText();
+  State<UrlText> createState() => _UrlText();
 }
 
 class _UrlText extends State<UrlText> {
   Text textWidget;
-  _UrlTextStyle _style;
+  UrlTextStyle _style;
   TextStyle _currentStyle;
 
   TextStyle _activeStyle;
@@ -43,13 +29,16 @@ class _UrlText extends State<UrlText> {
     return Text(text);
   }
 
-  _UrlText() {
-    _style = _UrlTextStyle(
-      normal: widget.style.normal,
-      active: widget.style.active
+  @override
+  void initState() {
+    super.initState();
+    _style = UrlTextStyle(
+      normal: widget.style != null ? widget.style.normal : null,
+      active: widget.style != null ? widget.style.active : null,
     );
     _currentStyle = _style.normal;
   }
+
   @override
   GestureDetector build(BuildContext context){
     textWidget = Text(
@@ -58,31 +47,36 @@ class _UrlText extends State<UrlText> {
     );
     return GestureDetector(
       child: textWidget,
-      onTap: _onTap,
+      onTapDown: _onTapDown,
       onTapUp: _onTapUp,
     );
   }
 
-  void _onTap(){
+  void _onTapDown(TapDownDetails details){
     widget.onTap();
-    _currentStyle = widget.style.active;
+    print('tap!');
+    _currentStyle = _style.active;
     setState(() {});
   }
 
   void _onTapUp(TapUpDetails details) {
-    _currentStyle = widget.style.normal;
-    setState(() {});
+    print('tap up!');
+    Future.delayed( const Duration(milliseconds: 300), () {
+      print('timeout!');
+      _currentStyle = _style.normal;
+      setState(() {});
+    });
   }
 
 }
 
 
 
-class _UrlTextStyle {
+class UrlTextStyle {
   TextStyle normal;
   TextStyle active;
 
-  _UrlTextStyle({
+  UrlTextStyle({
     this.normal,
     this.active,
   }) {
@@ -90,7 +84,7 @@ class _UrlTextStyle {
       color: Color(0xff1155cc),
     );
     active = active ?? TextStyle(
-      color: Color(0xff1155cc),
+      color: Color(0xff000000),
     );
   }
 }
