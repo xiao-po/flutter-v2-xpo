@@ -20,6 +20,22 @@ enum ContentType {
 class RichTextContentElement {
   ContentType type;
   String content;
+
+
+  bool isBlockElement(){
+    switch(type) {
+      case ContentType.p:
+      case ContentType.img:
+      case ContentType.pre:
+      case ContentType.code:
+      case ContentType.ol:
+      case ContentType.ul:
+      case ContentType.li:
+      case ContentType.h1:
+      case ContentType.h2:  return true;
+      default: return false;
+    }
+  }
 }
 
 class StringContentElement extends RichTextContentElement {
